@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
+
+	"github.com/wagnerfonseca/scraper-fundamentus/model"
 )
 
 func main() {
@@ -34,21 +36,24 @@ func main() {
 			detailCollector.Visit(symbolURL)
 			s := strings.Replace(symbolURL, "https://www.fundamentus.com.br/detalhes.php?papel=", "", -1)
 
+			symbol := &model.Symbol{
+				Papel: s,
+			}
+
 			if len(check) > 0 {
 				for k, v := range m[s] {
-					log.Println(" - ", k, ":", v)
+					model.Build(symbol, k, v)
 					check = check[:0]
 				}
 			}
 			_, ok := m[s]
 			if ok {
 				for k, v := range m[s] {
-					log.Println(" - ", k, ":", v)
+					model.Build(symbol, k, v)
 				}
 			} else {
 				check = append(check, s)
 			}
-
 		}
 	})
 
