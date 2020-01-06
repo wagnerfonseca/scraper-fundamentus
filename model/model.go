@@ -56,6 +56,8 @@ type Symbol struct {
 // Build a symbol entity
 func Build(symbol *Symbol, k, v string) {
 	switch k {
+	case "Papel":
+		symbol.Papel = v
 	case "Vol $ méd (2m)":
 		symbol.VolMed = v
 	case "P/Cap. Giro":

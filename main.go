@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/csv"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -11,6 +13,18 @@ import (
 
 func main() {
 
+	fileName := "fundamentus.csv"
+	file, err := os.Create(fileName)
+	if err != nil {
+		log.Fatalf("Cannot create file %q: %s\n", fileName, err)
+		return
+	}
+	defer file.Close()
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	writer.Write([]string{"Papel", "Cotacao", "ReceitaLiquida"})
+
 	// Instantiate default collector
 	c := colly.NewCollector()
 
@@ -18,8 +32,6 @@ func main() {
 	detailCollector := c.Clone()
 
 	m := make(map[string]map[string]string)
-	// Check if a symbol was verified
-	check := make([]string, 0)
 	var symbol string = ""
 
 	// Before making a request print "Visiting ..."
@@ -36,23 +48,18 @@ func main() {
 			detailCollector.Visit(symbolURL)
 			s := strings.Replace(symbolURL, "https://www.fundamentus.com.br/detalhes.php?papel=", "", -1)
 
-			symbol := &model.Symbol{
-				Papel: s,
-			}
+			symbol := &model.Symbol{}
 
-			if len(check) > 0 {
-				for k, v := range m[s] {
-					model.Build(symbol, k, v)
-					check = check[:0]
-				}
-			}
 			_, ok := m[s]
 			if ok {
 				for k, v := range m[s] {
 					model.Build(symbol, k, v)
 				}
-			} else {
-				check = append(check, s)
+				writer.Write([]string{
+					symbol.Papel,
+					symbol.Cotacao,
+					symbol.ReceitaLiquida,
+				})
 			}
 		}
 	})
@@ -73,6 +80,8 @@ func main() {
 	})
 
 	c.Visit("https://www.fundamentus.com.br/detalhes.php")
+
+	log.Printf("Scraping finished, check file %q for results\n", fileName)
 
 	// Display collector's statistics
 	log.Println(c)
