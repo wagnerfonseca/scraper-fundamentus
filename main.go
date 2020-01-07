@@ -23,7 +23,7 @@ func main() {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	writer.Write([]string{"Papel", "Cotacao", "ReceitaLiquida"})
+	writer.Write(header())
 
 	// Instantiate default collector
 	c := colly.NewCollector()
@@ -55,11 +55,7 @@ func main() {
 				for k, v := range m[s] {
 					model.Build(symbol, k, v)
 				}
-				writer.Write([]string{
-					symbol.Papel,
-					symbol.Cotacao,
-					symbol.ReceitaLiquida,
-				})
+				writer.Write(buildRow(symbol))
 			}
 		}
 	})
@@ -95,4 +91,82 @@ func add(m map[string]map[string]string, symbol, key, value string) {
 		m[symbol] = mm
 	}
 	mm[key] = value
+}
+
+// buildRow build row for csv file
+func buildRow(symbol *model.Symbol) []string {
+	return []string{
+		symbol.Papel,
+		symbol.Cotacao,
+		symbol.DataUtlCot,
+		symbol.Empresa,
+		symbol.Setor,
+		symbol.Subsetor,
+		symbol.VolMed,
+		symbol.ValorMercado,
+		symbol.NroAcoes,
+		symbol.PL,
+		symbol.PVP,
+		symbol.PEBIT,
+		symbol.Ativo,
+		symbol.PAtivCircLiq,
+		symbol.PAtivos,
+		symbol.PatrimLiq,
+		symbol.ReceitaLiquida,
+		symbol.LucroLiquido,
+		symbol.EBIT,
+		symbol.EVEBITDA,
+		symbol.EVEBIT,
+		symbol.MargLiquida,
+		symbol.MargBruta,
+		symbol.MargEBIT,
+		symbol.PCapGiro,
+		symbol.DivYield,
+		symbol.DividaLiquida,
+		symbol.DividaBruta,
+		symbol.ROIC,
+		symbol.ROE,
+		symbol.LiquidezCorrente,
+		symbol.DivBrPatrim,
+		symbol.GiroAtivos,
+	}
+}
+
+// header build the header to csv file
+func header() []string {
+	return []string{
+		"Papel",
+		"Cotacao",
+		"Data Utl Cot.",
+		"Empresa",
+		"Setor",
+		"Subsetor",
+		"Vol. Med.",
+		"Valor Mercado",
+		"Nro. Acoes",
+		"P/L",
+		"P/VP",
+		"P/EBIT",
+		"Ativo",
+		"P/Ativ Circ Liq",
+		"P/Ativos",
+		"Patrim Liquido",
+		"Receita Liquida",
+		"Lucro Liquido",
+		"EBIT",
+		"EVEBITDA",
+		"EVEBIT",
+		"Marg. Liquida",
+		"Marg. Bruta",
+		"Marg. EBIT",
+		"P/CapGiro",
+		"Div. Yield",
+		"Divida Liquida",
+		"Divida Bruta",
+		"ROIC",
+		"ROE",
+		"Liquidez Corrente",
+		"Div. Br Patrim",
+		"Giro Ativos",
+	}
 }
