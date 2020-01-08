@@ -124,5 +124,21 @@ func Build(symbol *Symbol, k, v string) {
 		symbol.Tipo = v
 	case "Subsetor":
 		symbol.Subsetor = v
+	case "ROE":
+		symbol.ROE = v
+	case "ROIC":
+		symbol.ROIC = v
+	case "Marg. EBIT":
+		symbol.MargEBIT = v
+	case "Marg. Líquida":
+		symbol.MargLiquida = v
+	case "Giro Ativos":
+		symbol.PCapGiro = v
+	case "VPA":
+		symbol.VPA = v
+	case "Div Br/ Patrim":
+		symbol.DivBrPatrim = v
+	case "Marg. Bruta":
+		symbol.MargBruta = v
 	}
 }

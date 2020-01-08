@@ -62,6 +62,7 @@ func main() {
 
 	// Extract details of the symbol
 	detailCollector.OnHTML("table tr", func(e *colly.HTMLElement) {
+
 		if strings.Contains(e.ChildText("td:first-child"), "Papel") {
 			symbol = strings.Replace(e.ChildText("td:nth-child(2)"), "?", "", -1)
 		}
@@ -72,6 +73,10 @@ func main() {
 
 		if e.ChildText("td:nth-child(3)") != "" {
 			add(m, symbol, strings.Replace(e.ChildText("td:nth-child(3)"), "?", "", -1), e.ChildText("td:nth-child(4)"))
+		}
+
+		if e.ChildText("td:nth-child(5)") != "" {
+			add(m, symbol, strings.Replace(e.ChildText("td:nth-child(5)"), "?", "", -1), e.ChildText("td:nth-child(6)"))
 		}
 	})
 
@@ -107,6 +112,7 @@ func buildRow(symbol *model.Symbol) []string {
 		symbol.NroAcoes,
 		symbol.PL,
 		symbol.PVP,
+		symbol.VPA,
 		symbol.PEBIT,
 		symbol.Ativo,
 		symbol.PAtivCircLiq,
@@ -146,6 +152,7 @@ func header() []string {
 		"Nro. Acoes",
 		"P/L",
 		"P/VP",
+		"VPA",
 		"P/EBIT",
 		"Ativo",
 		"P/Ativ Circ Liq",
